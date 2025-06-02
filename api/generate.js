@@ -1,12 +1,17 @@
-const express = require('express');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import axios from 'axios';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
+
+// Your existing code...
+
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
