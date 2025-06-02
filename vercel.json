@@ -12,11 +12,6 @@
         "methods": ["POST"],
         "dest": "/index.js"
       }
-    ],
-    "env": {
-      "OPENAI_API_KEY": "@openai_api_key",
-      "SHOPIFY_SHOP": "@shopify_shop",
-      "SHOPIFY_ACCESS_TOKEN": "@shopify_access_token"
-    }
+    ]
   }
   
