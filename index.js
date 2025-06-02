@@ -1,13 +1,13 @@
+// server.js
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
-require('dotenv').config(); // so you don’t hard-code your API key
+require('dotenv').config(); // loads OPENAI_API_KEY from your .env file
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors()); // allow cross-origin from your Shopify domain
+app.use(cors());
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 if (!OPENAI_API_KEY) {
@@ -15,11 +15,6 @@ if (!OPENAI_API_KEY) {
   process.exit(1);
 }
 
-/**
- * POST /generate
- * Body: { k1: string, k2: string, k3: string }
- * Returns: { imageUrl: string } on success
- */
 app.post('/generate', async (req, res) => {
   try {
     const { k1, k2, k3 } = req.body;
@@ -27,14 +22,12 @@ app.post('/generate', async (req, res) => {
       return res.status(400).json({ error: "Please provide three keywords (k1, k2, k3)." });
     }
 
-    // Build a single DALL·E prompt combining the three keywords:
-    // You can tailor this prompt any way you like. For example:
     const prompt = `A high-resolution digital illustration combining: ${k1}, ${k2}, and ${k3}. White background, vector style.`;
 
     const openaiResponse = await axios.post(
       'https://api.openai.com/v1/images/generations',
       {
-        model: 'dall-e-3',           // or whichever DALL·E model you have access to
+        model: 'dall-e-3',
         prompt: prompt,
         n: 1,
         size: '1024x1024'
@@ -47,7 +40,6 @@ app.post('/generate', async (req, res) => {
       }
     );
 
-    // DALL·E returns an array of data objects, each with a URL
     const imageUrl = openaiResponse.data.data[0].url;
     return res.json({ imageUrl });
   } catch (err) {

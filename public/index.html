@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ROAR T-Shirt Designer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 2rem;
+    }
+    form {
+      margin-bottom: 2rem;
+    }
+    #preview {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      padding: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to ROAR</h1>
+  <p>Use the form below to generate an image &amp; create a custom T-shirt.</p>
+
+  <form id="keywordForm">
+    <input
+      type="text"
+      id="k1"
+      placeholder="Keyword 1"
+      required
+      style="padding: 0.5rem; width: 200px;"
+    />
+    <input
+      type="text"
+      id="k2"
+      placeholder="Keyword 2"
+      required
+      style="padding: 0.5rem; width: 200px; margin-left: 1rem;"
+    />
+    <input
+      type="text"
+      id="k3"
+      placeholder="Keyword 3"
+      required
+      style="padding: 0.5rem; width: 200px; margin-left: 1rem;"
+    />
+    <button type="submit" style="margin-left: 1rem; padding: 0.5rem 1rem;">
+      Generate Image
+    </button>
+  </form>
+
+  <div id="result">
+    <h2>Preview</h2>
+    <img id="preview" src="" alt="Generated design will appear here" />
+  </div>
+
+  <script>
+    // When the form is submitted, call your backend API at /generate
+    document.getElementById('keywordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const k1 = document.getElementById('k1').value.trim();
+      const k2 = document.getElementById('k2').value.trim();
+      const k3 = document.getElementById('k3').value.trim();
+
+      if (!k1 || !k2 || !k3) {
+        alert('Please enter all three keywords.');
+        return;
+      }
+
+      try {
+        const resp = await fetch('/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ k1, k2, k3 }),
+        });
+        const data = await resp.json();
+        if (resp.ok && data.imageUrl) {
+          document.getElementById('preview').src = data.imageUrl;
+        } else {
+          alert(data.error || 'Image generation failed.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while generating the image.');
+      }
+    });
+  </script>
+</body>
+</html>
