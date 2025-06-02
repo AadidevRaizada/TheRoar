@@ -20,6 +20,10 @@ if (!OPENAI_API_KEY) {
   process.exit(1);
 }
 
+app.get('/', (req, res) => {
+  res.send('Hello from TheRoar API! Use POST /generate with k1, k2, k3.');
+});
+
 app.post('/generate', async (req, res) => {
   const { k1, k2, k3 } = req.body;
 
